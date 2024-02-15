@@ -13,12 +13,12 @@ AC_PROG_CPP
 AC_PROG_INSTALL
 
 AC_CHECK_PROG(NET_SNMP_CONFIG, net-snmp-config, net-snmp-config)
-if test x$NET_SNMP_CONFIG = x; then
-	AC_MSG_ERROR(Need net-snmp to continue.)
-else
-	NET_SNMP_CFLAGS=`net-snmp-config --cflags`
-	NET_SNMP_LIBS=`net-snmp-config --libs`
-fi
+AS_IF([test "x${NET_SNMP_CONFIG}" = x],[
+	AC_MSG_ERROR([Need net-snmp to continue.])
+],[
+	NET_SNMP_CFLAGS="`net-snmp-config --cflags`"
+	NET_SNMP_LIBS="`net-snmp-config --libs`"
+])
 
 AC_CHECK_LIB(nsl, inet_pton,
 	AC_DEFINE(HAVE_INET_PTON, 1, [Do we have inet_pton]))
