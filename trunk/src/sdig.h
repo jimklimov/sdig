@@ -1,5 +1,7 @@
 /* sdig.h - switch digger structures */
 
+#ifndef SDIG_SDIG_H
+
 /* switch information */
 
 typedef struct {
@@ -115,4 +117,7 @@ char *standardize_mac(char *buf);
 
 #ifdef FORCE_NOTUSE_SEMS
 #   undef SDIG_USE_SEMS
+#endif
+
+#define SDIG_SDIG_H 1
 #endif
