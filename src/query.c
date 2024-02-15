@@ -427,7 +427,9 @@ void
 switchscan(const char *ipaddr, const macstring_t macaddr)
 {
 	stype	*sw;
+#ifdef SDIG_USE_SEMS
 	int	ret, status;
+#endif
 
 	printf("\n");
 
