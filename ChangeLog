@@ -1,3 +1,10 @@
+0.46:
+
+Thu Feb 15 12:34:56 UTC 2024 / Jim Klimov <jimklimov@gmail.com>
+
+ * Modernized build recipes to match autotools of this decade
+ * Addressed modern compiler warnings (GCC, CLANG)
+
 0.45:
 
 Tue Jul 27 15:35:00 MSD 2010 / Jim Klimov <jimklimov@gmail.com>
