@@ -57,7 +57,7 @@ output_sem_init()
 	}
 
 	debug(3, "output_sem_init: got semid %d\n", lock);
-	
+
 	/*
 	 * the lock needs to be initialized to un unlocked state
 	 */
@@ -140,7 +140,7 @@ printmac(unsigned const char *mac)
 /*
  * make the OID numeric string for debug dumps, etc.
  */
-char 
+char
 *oid_to_ascii(oid* name, size_t name_length) {
 	static char s[MAX_OID_LEN*12];
 	size_t i;
@@ -184,7 +184,7 @@ printport(stype *sw, long port)
 	printf("     Port: %ld", port);
 	do_ifdescr(sw, port);
 	printf("\n");
-	
+
 	if (li)
 		printf("     Link: %s\n", li);
 

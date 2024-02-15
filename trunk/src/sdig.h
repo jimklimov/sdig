@@ -87,7 +87,7 @@ char *standardize_mac(char *buf);
  * No problems on: Solaris 10 x86, OpenSolaris snv_129 x86
  *
  * Below we use a couple of #defines, FORCE_USE_SEMS or FORCE_NOTUSE_SEMS
- * They may be set in Makefile to enforce the feature or to disable it 
+ * They may be set in Makefile to enforce the feature or to disable it
  * regardless of platform. Otherwise it depends...
  */
 #ifndef SPARC

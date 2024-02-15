@@ -10,9 +10,9 @@
 #include <errno.h>
 #include <stdio.h>
 #include <stdarg.h>
-#include <stdlib.h> 
-#include <string.h> 
-#include <unistd.h> 
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
 
 #include "sdig.h"
 #include "common.h"
@@ -116,7 +116,7 @@ parseconf(const char *fn, int ln, char *buf, char **arg, int numargs)
 				if (*ptr == '\\') {	/* literal as start */
 					if (i == (buflen - 1)) {
 						fprintf(stderr, "%s:%d:"
-						"\\ at end of line!", 
+						"\\ at end of line!",
 						fn, ln);
 						return 0;	/* failure */
 					}
@@ -137,7 +137,7 @@ parseconf(const char *fn, int ln, char *buf, char **arg, int numargs)
 					state = 2;	/* goto collect */
 					break;
 				}
-			
+
 				break;
 
 			case 1:		/* quotecollect */
@@ -147,7 +147,7 @@ parseconf(const char *fn, int ln, char *buf, char **arg, int numargs)
 				if (*ptr == '\\') {	/* literal handling */
 					if (i == (buflen - 1)) {
 						fprintf(stderr, "%s:%d:"
-						"\\ at end of line!", 
+						"\\ at end of line!",
 						fn, ln);
 						return 0;	/* failure */
 					}
@@ -165,7 +165,7 @@ parseconf(const char *fn, int ln, char *buf, char **arg, int numargs)
 				if (*ptr == '\\') {	/* literal handling */
 					if (i == (buflen - 1)) {
 						fprintf(stderr, "%s:%d:"
-						"\\ at end of line!", 
+						"\\ at end of line!",
 						fn, ln);
 						return 0;	/* failure */
 					}

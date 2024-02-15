@@ -5,7 +5,7 @@
  *	    up till sdig-0.40
  *  Copyright (C) 2005-2006  Russell Jackson <raj@csub.edu>
  *	    sdig-0.41 .. sdig-0.44
- *  Copyright (C) 2010  Jim Klimov <jimklimov@gmail.com>
+ *  Copyright (C) 2010-2024  Jim Klimov <jimklimov@gmail.com>
  *	    sdig-0.45 .. 0.46 (in progress)
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -34,11 +34,11 @@
 #include <netdb.h>
 #include <stdio.h>
 #include <stdarg.h>
-#include <stdlib.h> 
-#include <string.h> 
-#include <unistd.h> 
-#include <arpa/inet.h> 
-#include <netinet/in.h> 
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
 #include <sys/socket.h>
 #include <sysexits.h>
 
@@ -59,7 +59,7 @@ help(const char *prog)
 	printf("usage: %s [-d] [-f <config>] [-m <MAC>] [-v] [-F] (<IP> | <hostname>)\n", prog);
 	printf("\n");
 	printf("  -d		- increase debug level\n");
-	printf("  -F		- fast mode - no DNS/NetBIOS reverse lookups\n");	
+	printf("  -F		- fast mode - no DNS/NetBIOS reverse lookups\n");
 	printf("  -f <config>	- use alternate config <config>\n");
 	printf("                  default %s/sdig.conf\n", "CONFPATH");
 	printf("  -m <MAC>	- force MAC <MAC>, xx:xx:xx:xx:xx:xx format\n");
@@ -134,7 +134,7 @@ main(int argc, char *argv[])
 			case 'F':
 				fastmode = 1;
 				break;
-				
+
 			default:
 				help(prog);
 		}
@@ -174,7 +174,7 @@ main(int argc, char *argv[])
 		stdmac = standardize_mac(mac);
 
 		if ((query) && (isip(query))) {
-			printf("    Query: MAC %s in network %s\n", 
+			printf("    Query: MAC %s in network %s\n",
 				stdmac, query);
 
 			switchscan(query, pack_mac(stdmac));
@@ -182,7 +182,7 @@ main(int argc, char *argv[])
 		/* NOTREACHED */
 		} else {
 			/* Only a MAC is provided */
-			printf("    Query: MAC %s in any network\n", 
+			printf("    Query: MAC %s in any network\n",
 				stdmac);
 
 			switchscan(NULL, pack_mac(stdmac));
