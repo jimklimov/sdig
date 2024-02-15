@@ -1,30 +1,44 @@
+Significant release notes for SDIG
+==================================
+
+See also the `ChangeLog` file for more detailed information.
+
+Release notes for 0.46
+----------------------
+
+No functional changes are anticipated in this release.
+
+Code base and build recipes modernized for 2020's.
+
 Release notes for 0.45
+----------------------
 
 Maintainers have changed, the project moved to SourceForge, and a host of
-new features were added (see ChangeLog). In particular, you can now do
+new features were added (see `ChangeLog`). In particular, you can now do
 parallelized SNMP searches over several devices simultaneously, search
 for a MAC address on all switches, and use different IPs (or hostnames)
-for SNMP queries and as routing interfaces of ROUTER's.
+for SNMP queries and as routing interfaces of `ROUTER`'s.
 
-Tested to work on Linux and Solaris.
+Tested to work on FreeBSD, Linux and Solaris.
 
 Release notes for 0.40
+----------------------
 
-The build system now uses autoconf, so you can do the usual tricks with 
---prefix and --sysconfdir to customize your build.  Be aware that the 
-default configuration will look for sdig.conf in /usr/local/etc, while 
-previous versions assumed /etc.
+The build system now uses autoconf, so you can do the usual tricks with
+`--prefix` and `--sysconfdir` to customize your build.  Be aware that the
+default configuration will look for `sdig.conf` in `/usr/local/etc`, while
+previous versions assumed `/etc`.
 
-DESTDIR is now supported for packaging purposes.
+`DESTDIR` is now supported for packaging purposes.
 
-SNMPv2-MIB::sysName.0 is now printed when available for switches.
+`SNMPv2-MIB::sysName.0` is now printed when available for switches.
 
-nbname has been dropped.  If you still need additional NetBIOS type data, 
-write a script to call Samba's nmblookup, then set it as your HOSTINFO 
+`nbname` has been dropped.  If you still need additional NetBIOS type data,
+write a script to call Samba's `nmblookup`, then set it as your `HOSTINFO`
 command.
 
-UCD-SNMP support is essentially gone.  You can probably still make it work 
-if you're determined to use the old libraries, but it will require 
+UCD-SNMP support is essentially gone.  You can probably still make it work
+if you're determined to use the old libraries, but it will require
 renaming a bunch of includes and variable types.
 
-The -m switch to search by MAC addresses works again.
+The `-m` switch to search by MAC addresses works again.
