@@ -17,7 +17,10 @@
 #include <net-snmp/net-snmp-config.h>
 #include <net-snmp/net-snmp-includes.h>
 
+#include "common.h"
 #include "snmpget.h"
+#include "output.h"
+#include "query.h"
 
 #ifdef SDIG_USE_SEMS
 
@@ -35,7 +38,7 @@ int lock = 0;
  * initialize output locking semaphore
  */
 void
-output_sem_init()
+output_sem_init(void)
 {
 	int ret;
 	union semun semarg;
@@ -89,7 +92,7 @@ output_sem_init()
  * deallocate lock semaphore
  */
 void
-output_sem_cleanup()
+output_sem_cleanup(void)
 {
 	int ret;
 
@@ -126,7 +129,7 @@ output_lock(enum ops op)
  * make the octet string into something nicer for humans
  */
 void
-printmac(unsigned const char *mac)
+printmac(const macstring_t mac)
 {
 	int	i;
 
@@ -143,12 +146,11 @@ printmac(unsigned const char *mac)
 char
 *oid_to_ascii(oid* name, size_t name_length) {
 	static char s[MAX_OID_LEN*12];
-	size_t i;
-	unsigned long j, k;
+	size_t i, j;
 
 	j = 0;
 	for (i = 0; i < name_length; i++) {
-		j += sprintf(s+j, "%u", name[i]);
+		j += sprintf(s+j, "%zu", name[i]);
 		s[j++] = '.';
 	}
 	s[j-1] = '\0';

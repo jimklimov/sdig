@@ -45,6 +45,9 @@
 #include "sdig.h"
 #include "common.h"
 #include "snmpget.h"
+#include "query.h"
+#include "output.h"
+#include "config-sdig.h"
 
 /*
  * Flags
@@ -79,12 +82,13 @@ help(const char *prog)
 int
 main(int argc, char *argv[])
 {
-	char	*prog, *query, *conf = NULL, *mac = NULL, *stdmac = NULL;
+	char	*prog, *query, *conf = NULL, *mac = NULL;
+	macstring_t	stdmac = NULL;
 	int	i;
 
 	printf("Switch Digger %s", VERSION);
 #ifdef SDIG_USE_SEMS
-	printf(", query forking capable", VERSION);
+	printf(", query forking capable");
 	dofork=1;
 #else
 	dofork=0;

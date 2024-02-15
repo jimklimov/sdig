@@ -15,5 +15,8 @@ sdig_SOURCES = \
 
 noinst_HEADERS = \
 	sdig.h \
+	query.h \
+	config-sdig.h \
 	common.h \
-	snmpget.h
+	snmpget.h \
+	output.h

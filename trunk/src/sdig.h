@@ -2,6 +2,13 @@
 
 #ifndef SDIG_SDIG_H
 
+/* for reasons historic, we track and manipulate MAC address strings
+ * using unsigned characters, to avoid surprises with bit maths:
+ */
+
+typedef unsigned char	macstringchar_t;
+typedef macstringchar_t *	macstring_t;
+
 /* switch information */
 
 typedef struct {
@@ -45,12 +52,12 @@ typedef struct {
 }       pdtype;
 
 /* holds the results of a matched port */
-struct result {
+typedef struct {
 	stype s;
 	char *ifIdx;
 	char *ifAlias;
 	char *ifName;
-} result;
+}       result;
 
 /*
  * global data
@@ -70,14 +77,14 @@ extern int fastmode, verbose, dofork;
  */
 
 void printport(stype *sw, long port);
-void printmac(unsigned const char *mac);
+void printmac(const macstring_t mac);
 char *getdesc(const char *ip, long port);
 char *getlink(const char *ip, long port);
 
 
 char *dns_resolve(const char *host, int verbose);
 int isip(const char *buf);
-char *standardize_mac(char *buf);
+macstring_t standardize_mac(char *buf);
 
 /* At the moment of sdig-0.44-trunk (last checkin in 2006)
  * there is a problem with semaphore support (Bus error in semctl)

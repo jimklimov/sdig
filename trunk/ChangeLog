@@ -3,7 +3,13 @@
 Thu Feb 15 12:34:56 UTC 2024 / Jim Klimov <jimklimov@gmail.com>
 
  * Modernized build recipes to match autotools of this decade
- * Addressed modern compiler warnings (GCC, CLANG)
+ * Addressed modern compiler warnings (GCC, CLANG). Sequential build ability
+   (parallel builds sometimes stutter) tested on Ubuntu 22.04 with:
+	CC=gcc CFLAGS="-Werror -Wall -Wextra -pedantic" \
+	./autogen.sh && make -ks clean all
+	
+	CC=clang CFLAGS="-Werror -Wall -Wno-ignored-optimization-argument -Wextra -pedantic" \
+	./autogen.sh && make -ks clean all
 
 0.45:
 

@@ -13,9 +13,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <arpa/inet.h>
 
 #include "sdig.h"
 #include "common.h"
+#include "config-sdig.h"
 
 /*
  * Head pointers to object lists

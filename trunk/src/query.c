@@ -23,11 +23,14 @@
 #include "sdig.h"
 #include "common.h"
 #include "snmpget.h"
+#include "query.h"
+#include "output.h"
 
-char
-*findmac_at_rtr_ip(const char *ip, const char *rtr_ip, rtype *rtr)
+macstring_t
+findmac_at_rtr_ip(const char *ip, const char *rtr_ip, rtype *rtr)
 {
-	char	query[256], *ret;
+	char	query[256];
+	macstring_t	ret;
 	int	ifnum, eqcheck;
 
 	debug(2, "\n\nfindmac_at_rtr_ip: [%s] [%s] [%s] [%s]\n", ip, rtr_ip, rtr->ip, rtr->pw);
@@ -56,8 +59,8 @@ char
 			ifnum);
 	else
 		snprintf(query, sizeof(query),
-		"ip.ipNetToMediaTable.ipNetToMediaEntry.ipNetToMediaPhysAddress.%d.%s",
-		ifnum, ip);
+			"ip.ipNetToMediaTable.ipNetToMediaEntry.ipNetToMediaPhysAddress.%d.%s",
+			ifnum, ip);
 
 	ret = snmpget_mac(rtr->ip, rtr->pw, query);
 
@@ -65,8 +68,8 @@ char
 // Avaya's have offset OIDs by 1 (maybe VLAN ID reservation?), i.e.
 // RFC1213-MIB::atPhysAddress.1.1.192.168.42.4 = Hex-STRING: 00 1B 4F 0C 79 E1
 		snprintf(query, sizeof(query),
-		"ip.ipNetToMediaTable.ipNetToMediaEntry.ipNetToMediaPhysAddress.%d.1.%s",
-		ifnum, ip);
+			"ip.ipNetToMediaTable.ipNetToMediaEntry.ipNetToMediaPhysAddress.%d.1.%s",
+			ifnum, ip);
 
 		ret = snmpget_mac(rtr->ip, rtr->pw, query);
 	}
@@ -74,16 +77,13 @@ char
         return ret;
 }
 
-char
-*findmac(const char *ip, rtype *rtr)
+macstring_t
+findmac(const char *ip, rtype *rtr)
 {
-	char	query[256], *ret;
-	int	ifnum;
+	macstring_t	ret;
 
 	debug(2, "\n\nfindmac: [%s] [%s] [%s]\n", ip, rtr->ip, rtr->pw);
 
-	/* find the router's internal interface number */
-	ifnum = -1;
 	ret = NULL;
 
 	if (rtr->rtrip) {
@@ -119,7 +119,7 @@ char
 		    in the desired subnet; otherwise we'll try to find it
 		    and set rtrip value */
 
-		    /* This snmpwalking is a TODO for sdig-0.46 */
+		    /* This snmpwalking is a TODO for sdig-0.47 */
 
 			ret = NULL;
 		}
@@ -135,7 +135,7 @@ char
 
 
 int
-findport(unsigned const char *mac, stype *sw)
+findport(const macstring_t mac, stype *sw)
 {
 	char	query[64];
 
@@ -190,7 +190,7 @@ char
 }
 
 const char
-*macmfr(unsigned char *inmac)
+*macmfr(macstring_t inmac)
 {
 	FILE	*macdb;
 	char	buf[256], *tmp, macfind[16];
@@ -246,7 +246,11 @@ char
 	debug(5, "popen: %s\n", exec);
 	wq = popen(exec, "r");
 
-	fgets(buf, sizeof(buf), wq);
+	errno = 0;
+	if (!fgets(buf, sizeof(buf), wq) && errno) {
+		fprintf(stderr, "WINS lookup failed\n");
+		exit(1);
+	}
 	pclose(wq);
 
 	buf[strlen(buf) - 1] = '\0';
@@ -331,7 +335,7 @@ do_ifdescr(stype *sw, long port)
 int
 isip(const char *buf)
 {
-	int	i;
+	size_t	i;
 
 	for (i = 0; i < strlen(buf); i++)
 		if ((!isdigit(buf[i])) && (buf[i] != '.'))
@@ -416,11 +420,11 @@ stype
 	return NULL;
 }
 
-int fork_wrapper(unsigned const char *macaddr, stype *sw);
+int fork_wrapper(const macstring_t macaddr, stype *sw);
 
 /* ask the switch about where the MAC address is */
 void
-switchscan(const char *ipaddr, unsigned const char *macaddr)
+switchscan(const char *ipaddr, const macstring_t macaddr)
 {
 	stype	*sw;
 	int	ret, status;
@@ -493,7 +497,7 @@ switchscan(const char *ipaddr, unsigned const char *macaddr)
 }
 
 int
-fork_wrapper(unsigned const char *macaddr, stype *sw)
+fork_wrapper(const macstring_t macaddr, stype *sw)
 {
 	int port;
 
@@ -539,14 +543,17 @@ do_hostinfo(const char *ipaddr)
 	fflush(stdout);
 
 	snprintf(exec, sizeof(exec), "%s %s", hostinfo, ipaddr);
-	system(exec);
+	if (!system(exec)) {
+		fprintf(stderr, "WARNING: A hostinfo lookup failed: %s\n", exec);
+		/* exit(1); */
+	}
 }
 
 /* walk the list of routers checking for the IP address */
 void
 routerscan(const char *ipaddr)
 {
-	unsigned char	*macaddr;
+	macstring_t	macaddr;
 	rtype	*rtr;
 
 	/* spew out some additional info about the IP address */
@@ -613,13 +620,13 @@ resolvename(const char *name)
 
 /* Different OSes and switches have several ways to write a MAC address.
    Convert some of these formats to "XX:XX:XX:XX:XX:XX" standard */
-char
-*standardize_mac(char *buf)
+macstring_t
+standardize_mac(char *buf)
 {
-	static	char	mac[256];
-	char *ptr;
-	char cc, cd, cp, macfmt;
-	int i, j, k;
+	static	macstringchar_t	mac[256];
+	char cc, cd, cp;
+	size_t i;
+	int j, k;
 
 	/* First pass: count separators, determine known format */
 	cc = 0;
@@ -764,21 +771,22 @@ char
 	}
 
 
-	strncpy (mac, buf, 18);
+	strncpy ((char*)mac, buf, 18);
 	debug (1, "standardize_mac: unrecognized format, passed on as is: [%s]\n", mac);
 	return mac;
 }
 
 /* see if the specified mac address is sane, and make it machine-readable */
-char
-*pack_mac(char *buf)
+macstring_t
+pack_mac(macstring_t buf)
 {
-	int	i, cc, sl, v, mp;
+	size_t	i, sl;
+	int	cc, v, mp;
 	char	*ptr, *cp;
-	static	char	mac[16];
+	static	macstringchar_t	mac[16];
 
 	cc = 0;
-	for (i = 0; i < strlen(buf); i++) {
+	for (i = 0; i < strlen((char*)buf); i++) {
 
 		if (buf[i] == '-')
 			/* Possibly a Windows-format MAC XX-XX-XX-XX-XX-XX */
@@ -800,9 +808,9 @@ char
 		exit(1);
 	}
 
-	strcpy(mac, "");
-	ptr = buf;
-	sl = strlen(buf);
+	strcpy((char*)mac, "");
+	ptr = (char*)buf;
+	sl = strlen(ptr);
 	mp = 0;
 
 	for (i = 0; i < sl; i++) {
