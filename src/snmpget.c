@@ -1,5 +1,5 @@
 /* snmpget.c - SNMP OID retrieval functions for sdig
- * 
+ *
  * Copyright (C) 2002  Russell Kroll <rkroll@exploits.org>
  *
  * based on snmp-ups.c from Network UPS Tools:
@@ -165,7 +165,7 @@ char
 	    	return NULL;
 
 	final = malloc(response->variables->val_len + 1);
-	snprintf(final, response->variables->val_len + 1, "%s", 
+	snprintf(final, response->variables->val_len + 1, "%s",
 		response->variables->val.string);
 
 	snmp_free_pdu(response);

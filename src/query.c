@@ -11,11 +11,11 @@
 #include <netdb.h>
 #include <stdio.h>
 #include <stdarg.h>
-#include <stdlib.h> 
-#include <string.h> 
-#include <unistd.h> 
-#include <arpa/inet.h> 
-#include <netinet/in.h> 
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
 #include <sys/socket.h>
 #include <sys/wait.h>
 #include <sysexits.h>
@@ -51,11 +51,11 @@ char
 
 	eqcheck = strcmp(ip, rtr_ip);
 	if (!eqcheck)
-		snprintf(query, sizeof(query), 
+		snprintf(query, sizeof(query),
 			"interfaces.ifTable.ifEntry.ifPhysAddress.%d",
 			ifnum);
 	else
-		snprintf(query, sizeof(query), 
+		snprintf(query, sizeof(query),
 		"ip.ipNetToMediaTable.ipNetToMediaEntry.ipNetToMediaPhysAddress.%d.%s",
 		ifnum, ip);
 
@@ -63,8 +63,8 @@ char
 
 	if (!ret && eqcheck) {
 // Avaya's have offset OIDs by 1 (maybe VLAN ID reservation?), i.e.
-// RFC1213-MIB::atPhysAddress.1.1.192.168.42.4 = Hex-STRING: 00 1B 4F 0C 79 E1 
-		snprintf(query, sizeof(query), 
+// RFC1213-MIB::atPhysAddress.1.1.192.168.42.4 = Hex-STRING: 00 1B 4F 0C 79 E1
+		snprintf(query, sizeof(query),
 		"ip.ipNetToMediaTable.ipNetToMediaEntry.ipNetToMediaPhysAddress.%d.1.%s",
 		ifnum, ip);
 
@@ -74,7 +74,7 @@ char
         return ret;
 }
 
-char 
+char
 *findmac(const char *ip, rtype *rtr)
 {
 	char	query[256], *ret;
@@ -202,7 +202,7 @@ const char
 
 	/* rewrite the MAC address into something that'll match the table */
 
-	snprintf(macfind, sizeof(macfind), "%02x %02x %02x", 
+	snprintf(macfind, sizeof(macfind), "%02x %02x %02x",
 		inmac[0], inmac[1], inmac[2]);
 
 	while (fgets(buf, sizeof(buf), macdb)) {
@@ -285,7 +285,7 @@ do_ifdescr(stype *sw, long port)
 	long	ifnum;
 
 	/* first get the switch's ifnum for the port */
-	
+
 	snprintf(query, sizeof(query), "SNMPv2-SMI::mib-2.17.1.4.1.2.%ld", port);
 	ifnum = snmpget_int(sw->ip, sw->pw, query);
 
@@ -387,8 +387,8 @@ stype
 		/* NOTE: may check same switch many times, i.e.
 		    for Cisco Catalysts - different VLANs require
 		    different community strings. */
-			    
-		/* Check uniquity for same switch IP x COMMUNITY */ 
+
+		/* Check uniquity for same switch IP x COMMUNITY */
 
 		tmpuniq = firstsw;
 		while (tmpuniq != tmp && tmp && tmpuniq) {
@@ -426,7 +426,7 @@ switchscan(const char *ipaddr, unsigned const char *macaddr)
 	int	ret, status;
 
 	printf("\n");
-	
+
 	if (get_debuglevel() >= 2) {
 		debug(2, "switchscan: seeking (%s, ", (ipaddr?ipaddr:"Any_IP"));
 		printmac(macaddr);
@@ -437,7 +437,7 @@ switchscan(const char *ipaddr, unsigned const char *macaddr)
 
 	while (sw) {
 		debug(3, "switchscan: matched %s\n", sw->ip);
-	
+
 #ifdef SDIG_USE_SEMS
 		if ( dofork ) {
 			/* fflush is needed to correctly pass output
@@ -479,7 +479,7 @@ switchscan(const char *ipaddr, unsigned const char *macaddr)
 
 		sw = find_switch(ipaddr, sw);
 	}
-	
+
 #ifdef SDIG_USE_SEMS
 	if ( dofork ) {
 		while ((ret = wait(&status)) != -1)
@@ -578,7 +578,7 @@ routerscan(const char *ipaddr)
 			printf("   TgtMAC: ");
 			printmac(macaddr);
 			printf(" (%s)\n", macmfr(macaddr));
-			
+
 			switchscan(ipaddr, macaddr);
 		}
 
@@ -587,7 +587,7 @@ routerscan(const char *ipaddr)
 
 	fprintf(stderr, "Error: no routers found for %s\n", ipaddr);
 	exit(1);
-}	
+}
 
 /* turn <name> into an IP address and pass it to the router scanner */
 void
@@ -613,7 +613,7 @@ resolvename(const char *name)
 
 /* Different OSes and switches have several ways to write a MAC address.
    Convert some of these formats to "XX:XX:XX:XX:XX:XX" standard */
-char 
+char
 *standardize_mac(char *buf)
 {
 	static	char	mac[256];
@@ -774,7 +774,7 @@ char
 *pack_mac(char *buf)
 {
 	int	i, cc, sl, v, mp;
-	char	*ptr, *cp; 
+	char	*ptr, *cp;
 	static	char	mac[16];
 
 	cc = 0;
@@ -821,7 +821,7 @@ char
 		mac[mp++] = v;
 
 		ptr = cp;
-	}	
+	}
 
 	return mac;
 }
