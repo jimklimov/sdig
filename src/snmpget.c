@@ -32,9 +32,11 @@
 #include <net-snmp/net-snmp-config.h>
 #include <net-snmp/net-snmp-includes.h>
 
+#include "sdig.h"
 #include "common.h"
 
-static char *oid_to_ascii(oid* name, size_t name_length);
+/* from output.c */
+char *oid_to_ascii(oid* name, size_t name_length);
 
 netsnmp_pdu *response;
 
@@ -54,7 +56,7 @@ snmpget(char *host, char *community, char *reqoid)
 
 	session.version = SNMP_VERSION_1;
 	session.peername = host;
-	session.community = community;
+	session.community = (u_char*) community;
 	session.community_len = strlen(community);
 
 	init_snmp("sdig");
@@ -114,11 +116,11 @@ snmpget_int(char *host, char *community, char *reqoid)
 	return final;
 }
 
-char
-*snmpget_mac(char *host, char *community, char *reqoid)
+macstring_t
+snmpget_mac(char *host, char *community, char *reqoid)
 {
 	int	ret, i;
-	static	char	final[7];
+	static	macstringchar_t	final[7];
 
 	ret = snmpget(host, community, reqoid);
 
@@ -132,13 +134,13 @@ char
 	}
 
 	if (response->variables->val_len != 6) {
-		fprintf(stderr, "snmpget: invalid length %d\n",
+		fprintf(stderr, "snmpget: invalid length %zd\n",
 			response->variables->val_len);
 		return NULL;
 	}
 
 	for (i = 0; i < 6; i++)
-		final[i] = response->variables->val.string[i];
+		final[i] = (macstringchar_t)(response->variables->val.string[i]);
 
 	snmp_free_pdu(response);
 	return final;
