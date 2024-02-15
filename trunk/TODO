@@ -45,7 +45,7 @@ Then there are the blue sky items, such as:
  - include lookups of local host's ARP table, bypassing SNMP (i.e. good
    for a management station with links to many/all subnets).
    This quest also needs autoconf detector of capabilities for portability.
-   Work in progress postponed for sdig-0.46.
+   Work in progress postponed for sdig-0.47.
 
  - add a flag to limit number of spawned child processes for parallelized
    queries.
